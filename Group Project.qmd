@@ -33,14 +33,17 @@ This scatter plot shows **GDP per capita (PPP-adjusted)** vs **HDI** from 1990â€
 
 The current visualization is broad and lacks a clear narrative. To enhance it, we will:
 
-- **Focus Narrative:** Compare **developing vs developed countries** to highlight global inequality.
-- **Data Refinement:** Extract and clean relevant subsets to support this narrative.
-- **Regional & Outlier Analysis:** Identify patterns and outliers by region and economic classification.
-- **Trendlines:** Add regression lines to quantify GDP-HDI relationships.
-- **Dynamic Filtering:** Enable filtering by region, income group, and year to reduce clutter.
-- **Accessibility:** Improve labels, add color-blind-friendly palettes, and enrich tooltips.
-- **Annotations:** Highlight key countries and events for context.
-- **Guided Panels:** Provide narrative panels to aid interpretation.
+4. Filter by Country Development Status
+
+> Introduce a filter that allows users to display **only developed countries**, **only developing countries**, or **both** within the visualisation. This improvement will enable targeted data exploration and clearer comparisons across different development classifications.
+
+5. Dynamic Yearly Summary Panel
+
+> A **dynamic summary panel** will be added to **display key statistics for each year** as users interact with the timelapse animation. The panel will display the **average HDI and GDP for developed and developing countries**. It will also show the number of countries in each group, along with their **minimum, median, and maximum values**. This feature will provide users with clear and comparative insights at a glance, enhancing the interpretability of trends across different development classifications throughout the visualisation.
+
+6. Animated Timelapse with Annotations
+
+> Implement an **animated timelapse feature** to showcase changes in the data visualisation over time. The animation will pause at key milestones with clear, concise annotations to **highlight significant trends and shifts**. This improvement will enhance user engagement while providing contextual insights to support deeper understanding during playback.
 
 These changes will transform the visualization into a **focused, insightful tool centered on the global development gap** while maintaining interactivity and clarity.
 
