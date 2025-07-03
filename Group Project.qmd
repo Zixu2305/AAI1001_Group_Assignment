@@ -1,30 +1,43 @@
 ---
 title: "Project Proposal: HDI vs GDP Per Capita Visualization"
-author: Tan Zi Xu, Teo Royston, Sim Yue Chong Samuel, Ng Kay Cheng, Ramasubramanian Srinithi 
-format:  
+author: 
+  - Tan Zi Xu
+  - Teo Royston
+  - Sim Yue Chong Samuel
+  - Ng Kay Cheng
+  - Ramasubramanian Srinithi
+format:
   html:
     embed-resources: true
     number-sections: false
 ---
 
-# 1. Chosen Data Visualization Example
+# 1. Original Data Visualization in News Media
 
 We selected the **Our World in Data: HDI vs GDP per Capita** visualization (<a href="https://ourworldindata.org/grapher/human-development-index-vs-gdp-per-capita" target="_blank">link</a>).
 
-This scatter plot shows **GDP per capita (PPP-adjusted)** vs **HDI** from 1990–2021, helping users explore economic prosperity and human well-being globally. It is widely used for policy analysis and sustainable development discussions.
+This scatter plot shows **GDP per capita (PPP-adjusted)** vs **HDI** from 1990–2023, helping users explore economic prosperity and human well-being globally. It is widely used for policy analysis and sustainable development discussions.
 
 ![HDI vs GDP per Capita](visualisation.png)
 
 
-# 2. Critical Analysis of Strengths and Weaknesses
+# 2. Critical Analysis of the original visualization
+
+The Our World in Data HDI vs GDP per Capita visualization plots **GDP per capita (log scale)** against **Human Development Index (HDI)**, using **countries as data points sized by population and colored by region**. Its **interactive temporal slider (1990–2023)** and **hover tooltips** allow users to explore how countries' HDI and GDP per capita have evolved over time, while enabling detailed examination of specific countries and outliers.
+
+The visualization effectively communicates the global relationship between economic prosperity and human development, providing a clear, engaging overview suitable for policy discussions and educational contexts. It allows for comparative regional analysis and exploration of patterns across countries with differing income levels within a single view.
+
+The table below summarises these strengths and weaknesses clearly for quick reference:
 
 | **Strengths** | **Weaknesses** |
 |---|---|
 | Shows GDP-HDI correlation clearly | Axis labels lack clarity |
-| Interactive and engaging | Overlapping points, low contrast |
-| Uses recognized indicators | No trendlines/regression |
-| Temporal slider enables time analysis | No filters by income/region |
-| Visually appealing design | Not color-blind friendly |
+| Interactive and engaging with tooltips | Overlapping points in dense regions |
+| Uses globally recognized indicators | No trendlines/regression analysis |
+| Temporal slider enables year exploration | No filters by region, income group, or custom years |
+| Color-coded by region for broad comparison | Not color-blind friendly, low contrast |
+| Population-sized bubbles add depth | Bubble sizing overshadows smaller countries |
+| Log scale compresses wide GDP range effectively | Population sizing methodology unclear |
 
 ---
 
@@ -62,15 +75,6 @@ We will:
 
 We plan to:
 
-# 7. Planned Work Distribution
-| Team Member | Responsibility |
-|---|---|
-| Tan Zi Xu |  |
-| Teo Royston |  |
-| Sim Yue Chong Samuel | |
-| Ng Kay Cheng |  |
-| Ramasubramanian Srinithi |  |
 
----
 
 
