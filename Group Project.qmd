@@ -126,8 +126,51 @@ These sources are compiled within the **Our World in Data HDI vs GDP per Capita 
 # 5. Data Cleaning and Transformation Steps
 
 We will:
+Our World in Data (2025) based their visualization on data by UNDP, Human Development Report (2025), Eurostat, OECD, and World Bank (2025) and HYDE (2023), Gapminder (2022), UN WPP (2024). Available in CSV format with seperated by country, country code, year, HDI, GDP per capita, population, and region.
+```{r}
+library(tidyverse)
+library(jsonlite)
+
+# Fetch the data
+df <- read.csv("https://ourworldindata.org/grapher/human-development-index-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=true")
+
+# Fetch the metadata
+metadata <- fromJSON("https://ourworldindata.org/grapher/human-development-index-vs-gdp-per-capita.metadata.json?v=1&csvType=full&useColumnShortNames=true")
+
+glimpse(df)
+summary(df)
+```
+
+filtering for only valid hdi values, valid country code,find no of. missing GDPs, potentially populate region coulumn. This provides us a range of usage data from 1990 - 2023.
+```{r}
+df_cleaned <- df |>
+  filter(!is.na("hdi__sex_total"), # Valid HDI values
+         !is.na("Code")  # Valid country codes
+         )
+head(df_cleaned,10)
+# Count missing GDP values
+missing_gdp_count <- sum(is.na(df_cleaned$"ny_gdp_pcap_pp_kd"))
+missing_gdp_count
+```
+
+Checking for unique entities
+```{r}
+unique_entities <- unique(df_cleaned$"Entity")
+unique_entities
+```
 
 
+### 📌 Relevant Data:
+
+- `Entity`: Country Name
+- `Code`: Country Code
+- `Year`: Year
+- `Human Development Index` :  A higher HDI implies longer, healthier lives, better education and higher command over resources
+- `GDP Per Capita`: World Bank data on countries GDP per capita, adjusted for purchasing power parity (PPP) in constant 2021 international dollars.
+- `Population`: Historical population data for each country.
+- `World Region`: Provided by Our World in Data, categorizing countries into regions for comparative analysis.
+
+High number of missing GDP values, especially for developing countries, which may affect the analysis. We will explore methods to handle these missing values, such as imputation or exclusion based on the context of our analysis.
 
 # 6. Planned Data Analysis
 
