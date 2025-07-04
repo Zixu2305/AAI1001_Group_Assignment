@@ -6,13 +6,19 @@ author:
   - Sim Yue Chong Samuel
   - Ng Kay Cheng
   - Ramasubramanian Srinithi
+date: "2025-07-04"
 format:
   html:
-    embed-resources: true
-    number-sections: false
+    toc: true
+    number-sections: true       # enable section numbering
+    split:
+      type: section
+      level: 2                  # paginate at each H2
+      paged: true
+    paged-table: true
 ---
 
-# 1. Original Data Visualization in News Media
+# . Original Data Visualization in News Media
 
 We selected the **Our World in Data: HDI vs GDP per Capita** visualization (<a href="https://ourworldindata.org/grapher/human-development-index-vs-gdp-per-capita" target="_blank">link</a>).
 
@@ -20,18 +26,17 @@ This scatter plot shows **GDP per capita (PPP-adjusted)** vs **HDI** from 1990�
 
 ![HDI vs GDP per Capita](visualisation.png)
 
+# . Critical Analysis of the original visualization
 
-# 2. Critical Analysis of the original visualization
-
-The Our World in Data HDI vs GDP per Capita visualization plots **GDP per capita (log scale)** against **Human Development Index (HDI)**, using **countries as data points sized by population and colored by region**. Its **interactive temporal slider (1990–2023)** and **hover tooltips** allow users to explore how countries' HDI and GDP per capita have evolved over time, while enabling detailed examination of specific countries and outliers.
+The Our World in Data HDI vs GDP per Capita visualization plots **GDP per capita (log scale) \[X-Axis\]** against **Human Development Index (HDI) \[Y-Axis\]**, using **countries as data points sized by population and colored by region**. Its **interactive temporal slider (1990–2023)** and **hover tooltips** allow users to explore how countries' HDI and GDP per capita have evolved over time, while enabling detailed examination of specific countries and outliers.
 
 The visualization effectively communicates the global relationship between economic prosperity and human development, providing a clear, engaging overview suitable for policy discussions and educational contexts. It allows for comparative regional analysis and exploration of patterns across countries with differing income levels within a single view.
 
 The table below summarises these strengths and weaknesses clearly for quick reference:
 
 | **Strengths** | **Weaknesses** |
-|---|---|
-| Shows GDP-HDI correlation clearly | Axis labels lack clarity |
+|------------------------------------|------------------------------------|
+| Shows GDP-HDI correlation clearly | Axis labels lack clarity, not enough intuitive context |
 | Interactive and engaging with tooltips | Overlapping points in dense regions |
 | Uses globally recognized indicators | No trendlines/regression analysis |
 | Temporal slider enables year exploration | No filters by region, income group, or custom years |
@@ -39,98 +44,106 @@ The table below summarises these strengths and weaknesses clearly for quick refe
 | Population-sized bubbles add depth | Bubble sizing overshadows smaller countries |
 | Log scale compresses wide GDP range effectively | Population sizing methodology unclear |
 
----
+------------------------------------------------------------------------
 
-
-# 3. Proposed Improvements
+# . Proposed Improvements
 
 The current visualization is broad and lacks a clear narrative. To enhance it, we will:
 
-## 1. Define a focus narrative
+## . Define a focus narrative
 
-> **Developed countries** are typically characterized by both **high human development** and **high economic output per person**. In contrast, **developing countries** may exhibit **lower human development**, **lower income per capita**, or **both**.  
+> **Developed countries** are typically characterized by both **high human development** and **high economic output per person**. In contrast, **developing countries** may exhibit **lower human development**, **lower income per capita**, or **both**.
 >
 > This classification allows us to better understand **disparities in global development** and provides a meaningful basis for **comparative analysis**.
 
 To operationalize this using the dataset’s two key variables:
 
-- **Human Development Index (HDI)**
-- **GDP per capita** (PPP, constant international $)
+-   **Human Development Index (HDI)**
+-   **GDP per capita** (PPP, constant international \$)
 
 We define the categories as follows:
 
-- **Developed countries**:  
-  - **HDI ≥ 0.800**  
-  - **GDP per capita ≥ $12,536**
+-   **Developed countries**:
+    -   **HDI ≥ 0.800**\
+    -   **GDP per capita ≥ \$12,536**
 
-## 2. Add Contextual Bands Along X & Y Axes
+## . Add Contextual Bands Along X & Y Axes
 
->To enhance interpretability, we propose adding **shaded bands or labeled regions** along both axes to reflect internationally recognized **development and income classifications**. This helps viewers quickly assess where each country falls on the development spectrum.
+> To enhance interpretability, we propose adding **shaded bands or labeled regions** along both axes to reflect internationally recognized **development and income classifications**. This helps viewers quickly assess where each country falls on the development spectrum.
 
 **HDI Axis (Y): Human Development Levels (UNDP Standards)**
 
 We divide the HDI range into four tiers:
 
-- **Low HDI**: 0.000 – 0.549 
-- **Medium HDI**: 0.550 – 0.699 
-- **High HDI**: 0.700 – 0.799
-- **Very High HDI**:0.800 – 1.000
+-   **Low HDI**: 0.000 – 0.549
+-   **Medium HDI**: 0.550 – 0.699
+-   **High HDI**: 0.700 – 0.799
+-   **Very High HDI**:0.800 – 1.000
 
 **GDP per Capita Axis (X): Income Groupings (World Bank Standards)**
 
 We segment GDP per capita into income categories as follows:
 
-- **Low Income**: < $4,046  
-- **Lower-Middle Income**: $4,046 – $12,535  
-- **Upper-Middle Income**: $12,536 – $41,999  
-- **High Income**: ≥ $42,000
+-   **Low Income**: \< \$4,046\
+-   **Lower-Middle Income**: \$4,046 – \$12,535\
+-   **Upper-Middle Income**: \$12,536 – \$41,999\
+-   **High Income**: ≥ \$42,000
 
 The result is a more **narrative-driven** and **policy-relevant** visual that supports clearer analysis and storytelling.
 
+## . Add Boundary Threshold Lines for Developed vs Developing Classification
 
-## 3. Add Boundary Threshold Lines for Developed vs Developing Classification
+> To clearly separate **developed** and **developing** countries in the chart, we will add **two threshold lines** based on international standards:
 
->To clearly separate **developed** and **developing** countries in the chart, we will add **two threshold lines** based on international standards: 
-
-- **HDI ≥ 0.800** (Very High Human Development – UNDP)
-- **GDP per capita > $12,536** (High Income – World Bank)
+-   **HDI ≥ 0.800** (Very High Human Development – UNDP)
+-   **GDP per capita \> \$12,536** (High Income – World Bank)
 
 These lines help to:
 
-- Visually split the chart into four clear zones
-- Make it easy to spot which countries are developed or developing
-- Support the focus narrative with a clear, visual definition
+-   Visually split the chart into four clear zones
+-   Make it easy to spot which countries are developed or developing
+-   Support the focus narrative with a clear, visual definition
 
-## 4. Filter by Country Development Status
+## . Filter by Country Development Status
 
 > Introduce a filter that allows users to display **only developed countries**, **only developing countries**, or **both** within the visualisation. This improvement will enable targeted data exploration and clearer comparisons across different development classifications.
 
-## 5. Dynamic Yearly Summary Panel
+## . Dynamic Yearly Summary Panel
 
 > A **dynamic summary panel** will be added to **display key statistics for each year** as users interact with the timelapse animation. The panel will display the **average HDI and GDP for developed and developing countries**. It will also show the number of countries in each group, along with their **minimum, median, and maximum values**. This feature will provide users with clear and comparative insights at a glance, enhancing the interpretability of trends across different development classifications throughout the visualisation.
 
-## 6. Animated Timelapse with Annotations
+## . Animated Timelapse with Annotations
 
 > Implement an **animated timelapse feature** to showcase changes in the data visualisation over time. The animation will pause at key milestones with clear, concise annotations to **highlight significant trends and shifts**. This improvement will enhance user engagement while providing contextual insights to support deeper understanding during playback.
 
 These changes will transform the visualization into a **focused, insightful tool centered on the global development gap** while maintaining interactivity and clarity.
 
-
-
-# 4. Data Sources and Sample Data
+# . Data Sources and Sample Data
 
 **Data sources:** UNDP, Human Development Report (2025); Eurostat, OECD, and World Bank (2025); HYDE (2023); Gapminder - Population v7 (2022); UN, World Population Prospects (2024); Gapminder - Systema Globalis (2022); Our World in Data – *with major processing by Our World in Data*.
 
 These sources are compiled within the **Our World in Data HDI vs GDP per Capita visualization**.
- 
-# 5. Data Cleaning and Transformation Steps
 
-We will:
-Our World in Data (2025) based their visualization on data by UNDP, Human Development Report (2025), Eurostat, OECD, and World Bank (2025) and HYDE (2023), Gapminder (2022), UN WPP (2024). Available in CSV format with seperated by country, country code, year, HDI, GDP per capita, population, and region.
-```{r}
+# . Data Cleaning and Transformation Steps
+
+We will: Our World in Data (2025) based their visualization on data by UNDP, Human Development Report (2025), Eurostat, OECD, and World Bank (2025) and HYDE (2023), Gapminder (2022), UN WPP (2024). Available in CSV format with seperated by country, country code, year, HDI, GDP per capita, population, and region.
+
+## Libraries Used
+
+```{r setup-libraries, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 library(tidyverse)
 library(jsonlite)
+library(stringr)
+library(DT)
+library(htmltools)
+library(glue)
+library(knitr)
+library(gt)
+```
 
+## Exploratory Data Analysis
+
+```{r}
 # Fetch the data
 df <- read.csv("https://ourworldindata.org/grapher/human-development-index-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=true")
 
@@ -141,41 +154,277 @@ glimpse(df)
 summary(df)
 ```
 
-filtering for only valid hdi values, valid country code,find no of. missing GDPs, potentially populate region coulumn. This provides us a range of usage data from 1990 - 2023.
-```{r}
-df_cleaned <- df |>
-  filter(!is.na("hdi__sex_total"), # Valid HDI values
-         !is.na("Code")  # Valid country codes
-         )
-head(df_cleaned,10)
-# Count missing GDP values
-missing_gdp_count <- sum(is.na(df_cleaned$"ny_gdp_pcap_pp_kd"))
-missing_gdp_count
-```
-
 Checking for unique entities
+
 ```{r}
-unique_entities <- unique(df_cleaned$"Entity")
-unique_entities
+#| code-overflow: scroll
+#| code-overflow-lines: 10
+#| code-overflow-height: 200px
+
+unique_entities_tbl <- data.frame(
+  Index  = seq_along(unique(df$Entity)),
+  Entity = unique(df$Entity)
+)
+
+# A little HTML container for the live count
+count_tag <- tags$div(
+  tags$strong("Entities showing: "),
+  tags$span(
+    id    = "uniq_count",
+    style = "text-decoration: underline;",
+    nrow(unique_entities_tbl)
+  )
+)
+
+# Render the container + datatable
+browsable(
+  tagList(
+    count_tag,
+    datatable(
+      unique_entities_tbl,
+      caption = "Unique Entities (Indexed & Filterable)",
+      rownames = FALSE,
+      options = list(
+        pageLength   = 10,
+        lengthChange = FALSE,
+        autoWidth    = TRUE,
+        # Whenever the table is redrawn, update #uniq_count with the number of filtered rows
+        drawCallback = JS("
+          function(settings) {
+            var api = this.api();
+            var info = api.page.info();
+            // info.recordsDisplay is the number of rows matching the filter
+            $('#uniq_count').html(info.recordsDisplay);
+          }
+        ")
+      )
+    )
+  )
+)
 ```
 
+## 📌 Relevant Data:
 
-### 📌 Relevant Data:
-
-- `Entity`: Country Name
-- `Code`: Country Code
-- `Year`: Year
-- `Human Development Index` :  A higher HDI implies longer, healthier lives, better education and higher command over resources
-- `GDP Per Capita`: World Bank data on countries GDP per capita, adjusted for purchasing power parity (PPP) in constant 2021 international dollars.
-- `Population`: Historical population data for each country.
-- `World Region`: Provided by Our World in Data, categorizing countries into regions for comparative analysis.
+-   `Entity`: Country Name
+-   `Code`: Country Code
+-   `Year`: Year
+-   `Human Development Index` : A higher HDI implies longer, healthier lives, better education and higher command over resources
+-   `GDP Per Capita`: World Bank data on countries GDP per capita, adjusted for purchasing power parity (PPP) in constant 2021 international dollars.
+-   `Population`: Historical population data for each country.
+-   `World Region`: Provided by Our World in Data, categorizing countries into regions for comparative analysis.
 
 High number of missing GDP values, especially for developing countries, which may affect the analysis. We will explore methods to handle these missing values, such as imputation or exclusion based on the context of our analysis.
 
-# 6. Planned Data Analysis
+## Data Cleaning
 
-We plan to:
+```{r}
+# 1. Start with the raw data
+orig_n <- nrow(df)
 
+# 2. Filter to the year range
+df1 <- df |>
+  filter(Year >= 1990, Year <= 2023)
+after_year_n <- nrow(df1)
+cat(glue("✔ Kept {after_year_n} rows between 1990 and 2023 (dropped {orig_n - after_year_n}).\n"))
 
+# 3. Keep only proper 3-letter codes
+invalid_codes <- df1 |>
+  filter(!str_detect(Code, "^[A-Z]{3}$")) |>
+  pull(Code) |>
+  unique()
+df2 <- df1 |>
+  filter(str_detect(Code, "^[A-Z]{3}$"))
+after_code_n <- nrow(df2)
+cat(glue("✔ Kept {after_code_n} rows with 3-letter codes; dropped {after_year_n - after_code_n} rows (codes: {toString(invalid_codes)}).\n"))
 
+# 4. Rename & drop rows missing HDI or GDP
+df_clean <- df2 |>
+  rename(
+    hdi = "hdi__sex_total",
+    gdp = "ny_gdp_pcap_pp_kd"
+  )
 
+before_drop_na <- nrow(df_clean)
+df_clean <- df_clean |>
+  filter(!is.na(hdi), !is.na(gdp))
+after_drop_na <- nrow(df_clean)
+cat(glue("✔ Renamed columns; dropped {before_drop_na - after_drop_na} rows missing HDI or GDP.\n"))
+
+# 4.5 Fill in owid_region from each country’s 2023 observation
+region_lookup <- df_clean |>
+  filter(Year == 2023) |>
+  select(Entity, owid_region) |>
+  distinct()
+
+df_clean <- df_clean |>
+  select(-owid_region) |>
+  left_join(region_lookup, by = "Entity") |>
+  relocate(owid_region, .after = population_historical)
+
+cat(glue("✔ Filled `owid_region` for all countries based on 2023 data.\n"))
+
+# 5. Final summary
+cat(glue("✅ Final cleaned dataset: {nrow(df_clean)} rows, {ncol(df_clean)} columns.\n"))
+
+# Render as interactive table
+DT::datatable(
+  df_clean,
+  caption = "Final Cleaned Dataset",
+  rownames = FALSE,
+  options = list(
+    pageLength   = 10,
+    lengthChange = FALSE,
+    autoWidth    = TRUE
+  )
+)
+
+```
+
+## Data Transformation
+
+```{r}
+df_flagged <- df_clean |>
+  mutate(
+    dev_status = if_else(
+      hdi >= 0.80 & gdp > 12536,
+      "Developed",
+      "Developing"
+    )
+  )
+```
+
+```{r}
+df_banded <- df_flagged |>
+  mutate(
+    # HDI categories: Low (<0.55), Medium (0.55–0.70), High (0.70–0.80), Very High (≥0.80)
+    hdi_band = case_when(
+      hdi < 0.55 ~ "Low",
+      hdi < 0.70 ~ "Medium",
+      hdi < 0.80 ~ "High",
+      TRUE       ~ "Very High"
+    ),
+    # GDP per capita categories (World Bank income groups)
+    gdp_band = case_when(
+      gdp < 1086   ~ "Low-income",
+      gdp < 4255   ~ "Lower-middle",
+      gdp < 13206  ~ "Upper-middle",
+      TRUE         ~ "High-income"
+    )
+  )
+
+# 1) seed + sample
+set.seed(123)
+sample_entities <- df_banded |>
+  distinct(Entity) |>
+  slice_sample(n = 3) |>
+  pull(Entity)
+
+# 2) HTML heading
+heading_tag <- tags$p(
+  tags$strong("Showing band changes for:"), " ",
+  tags$u(paste(sample_entities, collapse = ", "))
+)
+
+# 3) Build your filtered DT
+dt <- df_banded |>
+  filter(Entity %in% sample_entities) |>
+  arrange(Entity, Year) |>
+  select(
+    Entity,
+    Year,
+    dev_status,    # new column
+    hdi,
+    hdi_band,
+    gdp,
+    gdp_band
+  ) |>
+  datatable(
+    caption = tags$caption(
+      style = "caption-side: top; text-align: left;",
+      "Sample Countries: Development, HDI & GDP Banding Over Time"
+    ),
+    rownames = FALSE,
+    options = list(
+      pageLength   = 10,
+      lengthChange = FALSE,
+      scrollY      = "300px",
+      scroller     = TRUE,
+      dom          = "tip"
+    )
+  )
+
+# 4) Combine and render as true HTML
+browsable(
+  tagList(
+    heading_tag,
+    dt
+  )
+)
+```
+
+```{r}
+stats_by_year <- df_banded |>
+  group_by(Year, dev_status) |>
+  summarize(
+    count       = n(),              # number of country‐observations
+    avg_hdi     = mean(hdi),        # mean HDI
+    avg_gdp     = mean(gdp),        # mean GDP per capita
+    hdi_min     = min(hdi),         # minimum HDI
+    hdi_median  = median(hdi),      # median HDI
+    hdi_max     = max(hdi),         # maximum HDI
+    gdp_min     = min(gdp),         # minimum GDP per capita
+    gdp_median  = median(gdp),      # median GDP per capita
+    gdp_max     = max(gdp),         # maximum GDP per capita
+    .groups     = "drop"
+  )
+
+stats_by_year |>
+  slice_head(n = 8) |>
+  datatable(
+    options = list(
+      dom = "t", 
+      autoWidth  = TRUE
+    ),
+    rownames = FALSE
+  )
+```
+
+# . Planned Data Analysis
+
+We will conduct the following analyses to support our “developed vs. developing countries” narrative:
+
+1.  Descriptive Statistics\
+    We will compute and compare the mean and median HDI and GDP per capita for developed and developing countries. Boxplots will visualize these distributions, highlighting disparities across groups.\
+    *Reasoning:* Establishing baseline differences helps quantify the development gap before deeper analysis and provides context for our visual narrative.
+
+2.  Quadrant-Band Scatter Plot\
+    We will plot HDI against GDP per capita (log scale) with median lines to create four interpretive quadrants (e.g., high HDI/low gap). Points will be color-coded by developed vs. developing status for clear visual comparison.\
+    *Reasoning:* This extends our current scatterplot into a more analytical tool, allowing us to categorize countries visually and identify outliers or patterns aligned with our project narrative.
+
+3.  Time-Series Trajectories\
+    We will generate line plots showing annual median HDI for each group over time, including a reference band (e.g., HDI = 0.8) to indicate high human development.\
+    *Reasoning:* Tracking HDI over time enables us to assess whether developing countries are catching up, supporting a dynamic perspective in our analysis beyond static snapshots.
+
+4.  Correlation and Elasticity Analysis\
+    We will calculate Pearson correlations between HDI and log GDP per capita within each group to measure the strength of association. Additionally, we will run a regression of HDI on log GDP per capita with a developed/developing group indicator to quantify differences in how income translates to human development across groups.\
+    *Reasoning:* This provides a quantitative backbone to our project, helping us understand the efficiency of GDP in improving HDI across different contexts, and supports evidence-based discussion in our report.
+
+These analyses will enable us to systematically examine patterns, disparities, and progress in human development, building a clear, data-driven narrative to enhance our visualization report.
+
+# . Planned Work Distribution
+
+```{r}
+team <- tribble(
+  ~Member, ~ProposalWorkDone, ~WorkToBeDone,              
+  "Ramasubramanian Srinithi", "Intro & Critical Analysis of Original Visualization", "Actual Data Analysis",
+  "Sim Yue Chong Samuel",   "Proposed Improvements (Focus Narrative, Contextual Bands, Threshold Lines)", "Create Poster",
+  "Ng Kay Cheng",   "Proposed Improvements (Filter, Summary Panel, Animation)", "Formatting & Final Edits",
+  "Teo Royston", "Exploratory Data Analysis", "Replicate Original Visualization",    
+  "Tan Zi Xu",  "Data Cleaning & Transformation", "Implement Proposed Improvements"
+)
+
+team |>
+  gt() |>
+  tab_header(title = "Planned Work Distribution") |>
+  cols_label(Member = "Team Member", ProposalWorkDone = "Work Done In Proposal", WorkToBeDone = "Work To Be Done")
+```
