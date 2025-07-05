@@ -13,7 +13,7 @@ format:
     number-sections: true       # enable section numbering
     split:
       type: section
-      level: 2                  # paginate at each H2
+      level: 1                  
       paged: true
     paged-table: true
 ---
@@ -175,7 +175,9 @@ count_tag <- tags$div(
     nrow(unique_entities_tbl)
   )
 )
-
+```
+```{r}
+#| echo: false
 # Render the container + datatable
 browsable(
   tagList(
@@ -265,7 +267,9 @@ cat(glue("✔ Filled `owid_region` for all countries based on 2023 data.\n"))
 
 # 5. Final summary
 cat(glue("✅ Final cleaned dataset: {nrow(df_clean)} rows, {ncol(df_clean)} columns.\n"))
-
+```
+```{r}
+#| echo: false
 # Render as interactive table
 DT::datatable(
   df_clean,
@@ -311,28 +315,30 @@ df_banded <- df_flagged |>
       TRUE         ~ "High-income"
     )
   )
-
-# 1) seed + sample
+```
+```{r}
+#| echo: false
+# seed + sample
 set.seed(123)
 sample_entities <- df_banded |>
   distinct(Entity) |>
   slice_sample(n = 3) |>
   pull(Entity)
 
-# 2) HTML heading
+# HTML heading
 heading_tag <- tags$p(
   tags$strong("Showing band changes for:"), " ",
   tags$u(paste(sample_entities, collapse = ", "))
 )
 
-# 3) Build your filtered DT
+# filtered DT
 dt <- df_banded |>
   filter(Entity %in% sample_entities) |>
   arrange(Entity, Year) |>
   select(
     Entity,
     Year,
-    dev_status,    # new column
+    dev_status,
     hdi,
     hdi_band,
     gdp,
