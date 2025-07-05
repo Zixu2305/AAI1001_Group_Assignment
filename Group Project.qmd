@@ -419,7 +419,7 @@ These analyses will enable us to systematically examine patterns, disparities, a
 
 # . Planned Work Distribution
 
-```{r}
+```{r echo=FALSE}
 team <- tribble(
   ~Member, ~ProposalWorkDone, ~WorkToBeDone,              
   "Ramasubramanian Srinithi", "Intro & Critical Analysis of Original Visualization", "Actual Data Analysis",
