@@ -1,0 +1,93 @@
+---
+title: "Project Poster: HDI vs GDP Per Capita Visualization"
+author: 
+  - Tan Zi Xu
+  - Teo Royston
+  - Sim Yue Chong Samuel
+  - Ng Kay Cheng
+  - Ramasubramanian Srinithi
+date: "2025-07-04"
+format:
+  html:
+    self-contained: true
+    code-fold: false
+---
+
+```{r full_plotly, echo=FALSE, message=FALSE, warning=FALSE}
+# 1. Libraries
+library(readr)
+library(dplyr)
+library(plotly)
+library(scales)
+library(tibble)
+
+# 1) Load & prep
+df <- read_csv("data/transformed_data.csv", show_col_types = FALSE) %>%
+  mutate(
+    hover_text = paste0(
+      "<b>", Entity, "</b><br>",
+      "GDP: $", comma(round(gdp)), "<br>",
+      "HDI: ", round(hdi,3), "<br>",
+      "Pop: ", comma(round(population_historical))
+    )
+  )
+
+# 2) Bands
+hdi_bands <- tibble(
+  ymin = c(0,0.55,0.70,0.80),
+  ymax = c(0.55,0.70,0.80,1.00),
+  fill = c("#f7fbff","#deebf7","#9ecae1","#3182bd")
+)
+cuts     <- c(1,1086,4255,13206,max(df$gdp,na.rm=TRUE))
+gdp_bands <- tibble(
+  xmin = cuts[-length(cuts)],
+  xmax = cuts[-1],
+  fill = c("#fff5f0","#fee0d2","#fc9272","#de2d26")
+)
+
+# 3) Base plotly with frame aesthetic
+p <- plot_ly(
+  df,
+  x     = ~gdp, 
+  y     = ~hdi, 
+  frame = ~Year,
+  type  = "scatter",      # <— tells plotly exactly which trace to use
+  mode  = "markers",      # <— tells plotly to draw points (not lines)
+  color = ~owid_region, 
+  size  = ~population_historical,
+  text  = ~hover_text,
+  hoverinfo = "text",
+  marker    = list(opacity = 0.8)
+)
+
+# 4) Shapes
+gdp_shapes <- lapply(seq_len(nrow(gdp_bands)), function(i) {
+  list(type="rect", xref="x", x0=gdp_bands$xmin[i], x1=gdp_bands$xmax[i],
+       yref="paper", y0=0, y1=1, fillcolor=gdp_bands$fill[i],
+       line=list(width=0), layer="below")
+})
+hdi_shapes <- lapply(seq_len(nrow(hdi_bands)), function(i) {
+  list(type="rect", xref="paper", x0=0, x1=1,
+       yref="y", y0=hdi_bands$ymin[i], y1=hdi_bands$ymax[i],
+       fillcolor=hdi_bands$fill[i], line=list(width=0), layer="below")
+})
+
+# 5) Layout + let Plotly add its own slider/buttons, then tweak speed
+  p %>%
+    layout(
+      shapes = c(gdp_shapes, hdi_shapes),
+      xaxis  = list(
+        type="log",
+        title="GDP per capita (international-$, 2021 prices)",
+        tickvals=c(1000,5000,10000,50000,100000),
+        ticktext=c("$1k","$5k","$10k","$50k","$100k")
+      ),
+      yaxis  = list(
+        title="Human Development Index",
+        range=c(0,1), tickvals=seq(0,1,0.1)
+      ),
+      legend=list(title=list(text="Region"))
+    ) %>%
+    animation_opts(frame = 800, transition = 0, redraw = FALSE) %>%
+    config(displayModeBar = FALSE)
+```
