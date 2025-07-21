@@ -1,0 +1,64 @@
+---
+title: "HDI vs GDP Per Capita Visualization"
+format:
+  poster-typst:
+    keep-typ: true
+    size: "36x24"
+    poster-authors: "Tan Zi Xu ,Teo Royston, Sim Yue Chong Samuel, Ng Kay Cheng, Ramasubramanian Srinithi"
+    institution-logo: "./images/sit.png"
+    footer-text: "AAI1001 AY24/25 Tri 2 Team Project"
+    footer-emails: "Team 14"
+    footer-color: "ebcfb2"
+---
+
+## Introduction
+
+
+
+## Original Visualization
+
+
+
+---
+
+## Critical Assessment of Original Visualization
+
+
+
+---
+
+## Suggested Improvements
+
+
+
+---
+
+## Implementation
+
+
+
+---
+
+## Improved Visualization
+
+
+
+---
+
+## Further Improvements
+
+
+
+---
+
+## References
+
+
+
+## Interactive Plots
+
+
+
+# Further Reading {.unnumbered}
+
+
