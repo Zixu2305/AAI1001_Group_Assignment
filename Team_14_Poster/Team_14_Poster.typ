@@ -414,57 +414,109 @@
 )
 
 
-== Introduction
+= Introduction
 <introduction>
-Climate change, driven by human activities such as burning fossil fuels and deforestation, has led to significant warming globally. In 2023, global temperatures were #strong[1.18℃ above the 20th-century average];\[^1\]. This affects ecosystems, human health, agriculture, and water resources. Despite scientific consensus, skepticism persists\[^2\]. Raising awareness is essential to drive collective action.
+Global development remains an ongoing challenge, as disparities in income and well-being continue to define the divide between developed and developing countries. While GDP per capita remains a common prosperity metric, it falls short in capturing crucial dimensions of quality of life like education and healthcare. The Human Development Index (HDI), a composite measure of income, life expectancy, and schooling, offers a more holistic benchmark, yet even it may not fully reveal the complex interplay of factors driving inequality across nations
 
-== Original Visualization
+Our project builds upon the Our World in Data visualization of HDI vs.~GDP per capita (2023), which effectively uses population-sized bubbles and region-based coloring to enhance its analytical depth. Through targeted refinements and potential integration of additional socio-economic dimensions, we aim to uncover more nuanced patterns in global development, highlight persistent gaps in human well-being, and provide a clearer visual narrative to inform crucial discussions on global inequality and progress.
+
+= Original Visualization
 <original-visualization>
-
-#horizontalrule
-
-== Critical Assessment of Original Visualization
-<critical-assessment-of-original-visualization>
-
-#horizontalrule
-
-== Suggested Improvements
-<suggested-improvements>
-
-#horizontalrule
-
-== Implementation
-<implementation>
-
-#horizontalrule
-
-== Improved Visualization
-<improved-visualization>
-
-#horizontalrule
-
-== Further Improvements
-<further-improvements>
-
-#horizontalrule
-
-== References
-<references>
-== Interactive Plots
-<interactive-plots>
-#block[
-#heading(
-level: 
-1
-, 
-numbering: 
-none
-, 
+#figure([
+#box(image("images/visualisation.png"))
+], caption: figure.caption(
+position: bottom, 
 [
-Further Reading
-]
+HDI vs GDP per Capita
+]), 
+kind: "quarto-float-fig", 
+supplement: "Figure", 
 )
+
+
+= Critical Assessment of Original Visualization
+<critical-assessment-of-original-visualization>
+== #emph[Strengths]
+<strengths>
+
+#horizontalrule
+
++ #strong[Clear Correlation Between GDP and HDI] : The scatter plot successfully reveals a strong positive relationship between a country’s GDP per capita and its Human Development Index (HDI). This validates the use of GDP as a proxy for national well-being in initial explorations.
+
++ #strong[Interactive and Engaging with Tooltips] : Users can hover over each bubble to reveal country-specific information. This interactivity enhances user engagement and facilitates exploration of the data without overwhelming the visual with text.
+
++ #strong[Use of Globally Recognized Indicators] : Both GDP per capita and HDI are well-established, widely understood indicators. This makes the visualization accessible to both general audiences and experts.
+
++ #strong[Temporal Slider Enables Yearly Comparisons] : The time slider allows users to explore how the relationship evolves over time (1990–2023), supporting temporal analysis and helping spot historical trends or anomalies.
+
++ #strong[Colour-Coded by Region for Broad Comparison] : Countries are grouped by continent using distinct colours, which aids users in performing regional comparisons and spotting geographical clusters or outliers.
+
++ #strong[Bubble Size Reflects Population] : The use of proportional bubble sizing adds an extra layer of information, emphasizing the relative population size of each country and showing how populous nations (e.g., India, China) contribute to global trends.
+
++ #strong[Log Scale Compresses Wide GDP Range] : A logarithmic scale on the x-axis handles the vast differences in GDP per capita values effectively, allowing low-income and high-income countries to be shown on the same scale without excessive crowding.
+
+== #emph[Weaknesses]
+<weaknesses>
+
+#horizontalrule
+
++ #strong[Axis Labels lack clarity, not enough intuitive context];: The x- and y-axis labels lack intuitive explanations. There is no quick contextual guide for non-technical viewers to interpret what a high or low HDI or GDP implies.
+
++ #strong[Overlapping points in dense regions];: In low-GDP regions, many data points overlap, making it difficult to distinguish individual countries and reducing readability.
+
++ #strong[No trendlines/regression analysis];: Although a general upward pattern is visible, the lack of a fitted line limits the user’s ability to assess the strength and consistency of the correlation quantitatively.
+
++ #strong[No filters by region, income group or custom years];: Users cannot filter the dataset by custom groupings such as "Low Income Countries" or "East Asia". This limits focused exploration and comparative analysis.
+
++ #strong[Low contrast thus not colour-blind friendly];: Some region colours are low in contrast and may not be distinguishable by colour-blind users. The visual fails to meet universal design or accessibility guidelines.
+
++ #strong[Bubbles sizing overshadow smaller countries];: Large countries like India and China dominate the chart visually due to their population size, which can unintentionally de-emphasize trends in smaller nations.
+
++ #strong[Population sizing methodology unclear];: It is unclear whether population sizes are static or dynamic over time as the bubble is not showing distinct changes.
+
+= Suggested Improvements
+<suggested-improvements>
++ #strong[Define a Clear Narrative];: Establish a clear distinction between developed and developing countries using HDI and GDP thresholds to guide interpretation and analysis.
+
++ #strong[Contextual Bands Along X & Y Axes];: Add labeled bands along both HDI and GDP axes to visually segment income and development categories, improving clarity and comparative insight.
+
++ #strong[Boundary Threshold Lines for Developed vs Developing Classification];: Introduce boundary lines to clearly demarcate developed from developing countries within the scatterplot.
+
++ #strong[Filters by Development Status, Region, and Year];: Implement filters that allow users to isolate countries by development status, geographic region, or custom year ranges for more focused exploration.
+
++ #strong[Dynamic Yearly Summary Panel];: Provide a yearly statistics panel displaying average, median, min, and max values of HDI and GDP for both developed and developing groups.
+
++ #strong[Improve Visual Accessibility and Clarity];: Reduce bubble overlap in dense areas through jittering and zoom features, and apply colorblind-safe palettes to ensure accessibility for all users.
+
++ #strong[Animated Time lapse with Annotations];: Integrate an animated timeline to show changes from 1990–2023, with pauses and annotations at key milestones to emphasize global development trends.
+
+= Implementation
+<implementation>
+== Data Source
+<data-source>
+UNDP – Human Development Report (2025), Eurostat, OECD, and World Bank (2025) ,HYDE (2023) – History Database of the Global Environment, Gapminder – Population v7 (2022), UN – World Population Prospects (2024), Gapminder – Systema Globalis (2022), Our World in Data – with major processing by Our World in Data
+
+== Software
+<software>
+== Workflow
+<workflow>
+#block[
+#set enum(numbering: "1)", start: 1)
++ Exploratory Data Analysis:
+
++ Feature Engineering:
+
++ Data Visualization:
 ]
+
+= Improved Visualization
+<improved-visualization>
+= Further Improvements
+<further-improvements>
+= References
+<references>
+= Further Reading
+<further-reading>
 
 
 
