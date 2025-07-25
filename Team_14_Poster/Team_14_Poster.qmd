@@ -87,9 +87,20 @@ Integrate an animated timeline to show changes from 1990–2023, with pauses and
 # Implementation
 
 ## Data Source
+***
 UNDP – Human Development Report (2025), Eurostat, OECD, and World Bank (2025) ,HYDE (2023) – History Database of the Global Environment, Gapminder – Population v7 (2022), UN – World Population Prospects (2024), Gapminder – Systema Globalis (2022), Our World in Data – with major processing by Our World in Data
 
 ## Software 
+***
+We used R and a range of packages to clean, analyze, and visualize the data:
+
+- readr – for importing cleaned CSV files
+- dplyr – for filtering, grouping, and summarising data
+- ggplot2 – for static visualizations such as boxplots and scatter plots
+- plotly – for interactive and animated development plots
+- scales – to format axis labels and numerical values clearly
+- tibble – to define development bands used in visual overlays
+- stats – to compute correlations, trends, and regression models
 
 ## Workflow 
 
