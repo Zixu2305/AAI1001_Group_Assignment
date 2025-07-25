@@ -106,7 +106,6 @@ hdi_annots <- list(
   list(x = -0.11, xref = "paper", y = 0.9,   yref = "y", text = "Very High HDI", showarrow = FALSE, xanchor = "right", yanchor = "middle", font = list(size=13))
 )
 
-
 gdp_annots <- list(
   list(
     x = mean(c(1, 1086)), y = -0.045, text = "Low income", showarrow = FALSE, xanchor = "center", yanchor="top", font = list(size=12)
@@ -137,154 +136,335 @@ p <- plot_ly(
   marker    = list(opacity=0.8, line=list(color="black",width=1))
 )
 
-# 5) Pause button
-pause_btn <- list(
-  list(type="buttons", showactive=FALSE,
-       x=-0.25, y=-0.237, xanchor="left",
-       buttons=list(
-         list(method="animate",
-              args=list(NULL,
-                        list(mode="immediate",
-                             frame=list(duration=0,redraw=FALSE),
-                             transition=list(duration=0))),
-              label="Pause")
-       ))
-)
+# 5) Custom play buttons - removed the top buttons, they'll be handled by bottom controls
 
-# 6) Finalize & force frame creation
+# 6) Finalize layout
 widget <- p %>%
-  animation_opts(frame=800, transition=0, redraw=FALSE) %>%
+  animation_opts(frame=800, transition=300, redraw=FALSE) %>%
   layout(
     shapes      = c(gdp_shapes, hdi_shapes, threshold_shapes),
     annotations = axis_band_annotations,
     xaxis       = list(
       type     = "log",
-      title    = "GDP per capita (international-$, 2021 prices)",
+      title    = "GDP per capita (international-$, 2021 prices)",
       tickvals = c(1000,5000,10000,50000,100000),
       ticktext = c("$1k","$5k","$10k","$50k","$100k")
     ),
     yaxis       = list(
-      title    = "Human Development Index",
+      title    = "Human Development Index",
       range    = c(0,1),
       tickvals = seq(0,1,0.1)
     ),
     margin      = list(l = 155, b = 90),
     legend      = list(title=list(text="Region")),
-    updatemenus = pause_btn
+    updatemenus = list() # Remove the top buttons
   ) %>%
-  config(displayModeBar=FALSE) %>%
-  plotly_build()
+  config(displayModeBar=FALSE)
 
-# 7) Attach JS overlays via onRender, passing stats via window.stats_panel_data
-widget <- onRender(
-  widget,
-  "
-  function(el, x) {
-  var stats = window.stats_panel_data;
-  var years = window.years_panel;
-
-  // --- Fill year picker dropdown ---
-  var picker = document.getElementById('year-picker');
-  if (picker && picker.options.length === 0 && years && years.length) {
-    years.forEach(function(y) {
-      var opt = document.createElement('option');
-      opt.value = y;
-      opt.text = y;
-      picker.appendChild(opt);
-    });
-    picker.onchange = function() {
-      updateStats(this.value);
-      // Animate plot to this year (frame)
-      var gd = el.querySelector('.js-plotly-plot');
-      if (gd) {
-        Plotly.animate(gd, {frame: {redraw: true, name: this.value}}, {mode: 'immediate'});
+# 7) Enhanced JavaScript with unified animation control and expanded milestones
+widget <- widget %>%
+  htmlwidgets::onRender("
+    function(el, x) {
+      var gd = document.getElementById(el.id);
+      var stats = window.stats_panel_data;
+      var years = window.years_panel;
+      
+      // Expanded milestone data with all relevant global development events
+      var milestoneYears = [1989, 1991, 1994, 1997, 2001, 2004, 2008, 2010, 2015, 2016, 2020, 2022];
+      var milestoneTexts = {
+        1989: 'Fall of Berlin Wall:<br>End of Cold War era, beginning<br>of major political transitions',
+        1991: 'Soviet Union Collapse:<br>Major geopolitical shift affecting<br>Eastern European development',
+        1994: 'Rwanda Genocide:<br>Humanitarian crisis highlighting<br>need for conflict prevention',
+        1997: 'Asian Financial Crisis:<br>Economic downturn affecting<br>emerging market development',
+        2001: 'Millennium Development Goals:<br>Global commitment to<br>reducing poverty and inequality',
+        2004: 'Indian Ocean Tsunami:<br>Natural disaster affecting<br>development in affected regions',
+        2008: 'Global Financial Crisis:<br>Economic downturn affecting<br>development worldwide',
+        2010: 'Arab Spring Begins:<br>Political upheaval affecting<br>Middle East and North Africa',
+        2015: 'Sustainable Development Goals:<br>New framework for global<br>development agenda',
+        2016: 'Paris Climate Agreement:<br>Global commitment to<br>climate action and sustainability',
+        2020: 'COVID-19 Pandemic:<br>Global health crisis impacting<br>human development progress',
+        2022: 'Russia-Ukraine War:<br>Major conflict affecting<br>global economy and development'
+      };
+      
+      var isPlaying = false;
+      var currentYearIndex = 0;
+      var animationTimeout;
+      var allYears = [];
+      var isTimelineMode = false; // Track which mode we're in
+      
+      // Extract all years from data
+      if (years && years.length) {
+        allYears = years.slice(); // Copy array
       }
-    };
-  }
+      
+      // Function to stop any running animation
+      function stopAnimation() {
+        if (isPlaying) {
+          isPlaying = false;
+          clearTimeout(animationTimeout);
+          
+          // Reset all button texts
+          var timelineBtn = document.getElementById('timeline-btn');
+          var playBtn = document.getElementById('play-btn');
+          
+          if (timelineBtn && timelineBtn.textContent.includes('Pause')) {
+            timelineBtn.textContent = '▶ Play Timeline';
+          }
+          if (playBtn && playBtn.textContent.includes('Pause')) {
+            playBtn.textContent = '▶ Play';
+          }
+        }
+      }
+      
+      // Function to reset to start
+      function resetToStart() {
+        stopAnimation();
+        currentYearIndex = 0;
+        if (allYears.length > 0) {
+          var firstYear = allYears[0];
+          animateToYear(firstYear);
+          updateStats(firstYear);
+          var picker = document.getElementById('year-picker');
+          if (picker) picker.value = firstYear;
+        }
+      }
+      
+      // Function to update annotations with milestones
+      function updateAnnotations(year, showMilestone) {
+        var currentAnnotations = [];
+        
+        // Add existing axis annotations
+        if (gd.layout && gd.layout.annotations) {
+          currentAnnotations = gd.layout.annotations.filter(function(ann) {
+            return ann.text && (ann.text.includes('HDI') || ann.text.includes('income'));
+          });
+        }
+        
+        // Add milestone annotation at bottom right of the plot area
+        if (showMilestone && milestoneTexts[year]) {
+          currentAnnotations.push({
+            text: milestoneTexts[year],
+            x: 0.98, y: 0.02,
+            xref: 'paper', yref: 'paper',
+            xanchor: 'right', yanchor: 'bottom',
+            showarrow: false,
+            font: {size: 11, color: 'darkred', family: 'Arial'},
+            bgcolor: 'rgba(255,255,255,0.95)',
+            bordercolor: 'darkred',
+            borderwidth: 2,
+            borderpad: 6
+          });
+        }
+        
+        Plotly.relayout(gd, {annotations: currentAnnotations});
+      }
+      
+      // Function to animate to specific year
+      function animateToYear(year) {
+        Plotly.animate(gd, [year.toString()], {
+          transition: {duration: 300},
+          frame: {duration: 0, redraw: false}
+        });
+        updateAnnotations(year, isTimelineMode && milestoneYears.includes(year));
+      }
+      
+      // Custom animation function
+      function customAnimate() {
+        if (!isPlaying || currentYearIndex >= allYears.length) {
+          stopAnimation();
+          return;
+        }
+        
+        var currentYear = allYears[currentYearIndex];
+        animateToYear(currentYear);
+        
+        // Update stats and picker
+        updateStats(currentYear);
+        var picker = document.getElementById('year-picker');
+        if (picker) picker.value = currentYear;
+        
+        // Check if this is a milestone year (only in timeline mode)
+        var isMilestone = isTimelineMode && milestoneYears.includes(currentYear);
+        var delay = isMilestone ? 6000 : 800; // 6s for milestone, 0.8s for regular
+        
+        currentYearIndex++;
+        animationTimeout = setTimeout(customAnimate, delay);
+      }
+      
+      // Function to start animation
+      function startAnimation(timelineMode, buttonElement) {
+        // Stop any existing animation first
+        stopAnimation();
+        
+        // Only reset to start if we're switching modes or not currently paused at a position
+        if (isTimelineMode !== timelineMode || currentYearIndex === 0) {
+          currentYearIndex = 0;
+        }
+        
+        isTimelineMode = timelineMode;
+        
+        // Start new animation
+        isPlaying = true;
+        
+        // Update button text
+        if (timelineMode) {
+          buttonElement.textContent = '⏸ Pause Timeline';
+        } else {
+          buttonElement.textContent = '⏸ Pause';
+        }
+        
+        customAnimate();
+      }
+      
+      // Override both play buttons behavior - now looking for bottom buttons only
+      function setupCustomControls() {
+        // Remove any existing top buttons
+        var topButtons = document.querySelectorAll('.updatemenu-button');
+        topButtons.forEach(function(btn) {
+          if (btn.closest('.js-plotly-plot')) {
+            btn.style.display = 'none';
+          }
+        });
+        
+        // Setup bottom custom buttons
+        setupBottomButtons();
+      }
+      
+      function setupBottomButtons() {
+        var timelineBtn = document.getElementById('timeline-btn');
+        var playBtn = document.getElementById('play-btn');
+        
+        if (timelineBtn) {
+          timelineBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isPlaying && isTimelineMode) {
+              stopAnimation();
+            } else {
+              startAnimation(true, this);
+            }
+          };
+        }
+        
+        if (playBtn) {
+          playBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isPlaying && !isTimelineMode) {
+              stopAnimation();
+            } else {
+              startAnimation(false, this);
+            }
+          };
+        }
+        
+        if (!timelineBtn || !playBtn) {
+          setTimeout(setupBottomButtons, 100);
+        }
+      }
+      
+      // Setup custom controls after plotly renders
+      setTimeout(setupCustomControls, 1000);
+      
+      // --- Original stats panel functionality ---
+      var picker = document.getElementById('year-picker');
+      if (picker && picker.options.length === 0 && years && years.length) {
+        years.forEach(function(y) {
+          var opt = document.createElement('option');
+          opt.value = y;
+          opt.text = y;
+          picker.appendChild(opt);
+        });
+        picker.onchange = function() {
+          // Stop any running animation when user manually selects year
+          stopAnimation();
+          
+          var selectedYear = parseInt(this.value);
+          updateStats(selectedYear);
+          updateAnnotations(selectedYear, false); // Don't show milestones for manual selection
+          if (gd) {
+            Plotly.animate(gd, {frame: {redraw: true, name: this.value}}, {mode: 'immediate'});
+          }
+        };
+      }
 
-  // --- Fill size legend (looks the same) ---
-  var sl = document.getElementById('size-legend');
-  if (sl && !sl.innerHTML) {
-    sl.style.background = 'rgba(255,255,255,0.97)';
-    sl.style.borderRadius = '8px';
-    sl.style.boxShadow = '0 0 6px rgba(0,0,0,0.10)';
-    sl.style.fontSize = '13px';
-    sl.style.padding = '10px 10px';
-    sl.innerHTML =
-      '<div><strong>Circles sized by</strong><br>Population</div>' +
-      '<div style=\"margin-top:6px;display:flex;align-items:center;gap:6px;\">' +
-        '<div style=\"width:20px;height:20px;border-radius:50%;background:lightgray;\"></div>' +
-        '<span>600&nbsp;M</span>' +
-      '</div>' +
-      '<div style=\"margin-top:4px;display:flex;align-items:center;gap:6px;\">' +
-        '<div style=\"width:30px;height:30px;border-radius:50%;background:lightgray;\"></div>' +
-        '<span>1.4&nbsp;B</span>' +
-      '</div>';
-  }
+      var sl = document.getElementById('size-legend');
+      if (sl && !sl.innerHTML) {
+        sl.style.background = 'rgba(255,255,255,0.97)';
+        sl.style.borderRadius = '8px';
+        sl.style.boxShadow = '0 0 6px rgba(0,0,0,0.10)';
+        sl.style.fontSize = '13px';
+        sl.style.padding = '10px 10px';
+        sl.innerHTML =
+          '<div><strong>Circles sized by</strong><br>Population</div>' +
+          '<div style=\"margin-top:6px;display:flex;align-items:center;gap:6px;\">' +
+            '<div style=\"width:20px;height:20px;border-radius:50%;background:lightgray;\"></div>' +
+            '<span>600&nbsp;M</span>' +
+          '</div>' +
+          '<div style=\"margin-top:4px;display:flex;align-items:center;gap:6px;\">' +
+            '<div style=\"width:30px;height:30px;border-radius:50%;background:lightgray;\"></div>' +
+            '<span>1.4&nbsp;B</span>' +
+          '</div>';
+      }
 
-  // --- Fill stats panel ---
-  function updateStats(year) {
-    var sb = document.getElementById('stats-box');
-    if (!sb) return;
-    var sub  = stats.filter(d => +d.Year == +year);
-    var devo = sub.find(d => d.dev_status=='Developing'),
-        dev  = sub.find(d => d.dev_status=='Developed');
-    if (!devo || !dev) {
-      sb.innerHTML = '<span style=\"color:red;\">No data for year ' + year + '</span>';
-      return;
+      function updateStats(year) {
+        var sb = document.getElementById('stats-box');
+        if (!sb) return;
+        var sub  = stats.filter(d => +d.Year == +year);
+        var devo = sub.find(d => d.dev_status=='Developing'),
+            dev  = sub.find(d => d.dev_status=='Developed');
+        if (!devo || !dev) {
+          sb.innerHTML = '<span style=\"color:red;\">No data for year ' + year + '</span>';
+          return;
+        }
+        sb.style.background = 'rgba(255,255,255,0.98)';
+        sb.style.borderRadius = '10px';
+        sb.style.boxShadow = '0 2px 10px rgba(0,0,0,0.11)';
+        sb.style.fontSize = '14px';
+        sb.style.padding = '12px 12px';
+        sb.innerHTML =
+          '<b>Year: ' + year + '</b><br>' +
+          '<b>Developing</b><br>' +
+          devo.count + ' countries<br>' +
+          'Avg GDP: $' + (+devo.avg_gdp).toLocaleString() + '<br>' +
+          'Avg HDI: '  + (+devo.avg_hdi).toFixed(3) + '<br><br>' +
+          '<b>Developed</b><br>' +
+          dev.count  + ' countries<br>' +
+          'Avg GDP: $' + (+dev.avg_gdp).toLocaleString() + '<br>' +
+          'Avg HDI: '  + (+dev.avg_hdi).toFixed(3);
+      }
+
+      // Initialize with first year
+      if (picker && years && years.length) {
+        picker.value = years[0];
+        updateStats(years[0]);
+        updateAnnotations(years[0], false);
+        if (gd) {
+          Plotly.animate(gd, {frame: {redraw: true, name: years[0]}}, {mode: 'immediate'});
+        }
+      }
     }
-    sb.style.background = 'rgba(255,255,255,0.98)';
-    sb.style.borderRadius = '10px';
-    sb.style.boxShadow = '0 2px 10px rgba(0,0,0,0.11)';
-    sb.style.fontSize = '14px';
-    sb.style.padding = '12px 12px';
-    sb.innerHTML =
-      '<b>Year: ' + year + '</b><br>' +
-      '<b>Developing</b><br>' +
-      devo.count + ' countries<br>' +
-      'Avg GDP: $' + (+devo.avg_gdp).toLocaleString() + '<br>' +
-      'Avg HDI: '  + (+devo.avg_hdi).toFixed(3) + '<br><br>' +
-      '<b>Developed</b><br>' +
-      dev.count  + ' countries<br>' +
-      'Avg GDP: $' + (+dev.avg_gdp).toLocaleString() + '<br>' +
-      'Avg HDI: '  + (+dev.avg_hdi).toFixed(3);
-  }
+  ")
 
-  // --- Set initial year and populate stats on load ---
-  if (picker && years && years.length) {
-    picker.value = years[0];
-    updateStats(years[0]);
-    // Animate plot to first year
-    var gd = el.querySelector('.js-plotly-plot');
-    if (gd) {
-      Plotly.animate(gd, {frame: {redraw: true, name: years[0]}}, {mode: 'immediate'});
-    }
-  }
-  
-}
-  
-  "
-)
-
-# 8) Inject stats JSON and print widget together
+# 8) Inject stats JSON and display
 browsable(
   tagList(
-    widget,   # your plotly chart comes FIRST, no overlays
+    widget,
     tags$div(
       id = "bottom-panel-row",
       style = "display:flex;flex-direction:row;gap:28px;align-items:flex-start;justify-content:flex-end;margin-top:16px;margin-right:32px;",
-      # 1. Dropdown & label
       tags$div(
         style="display:flex;align-items:center;gap:8px;",
-        tags$label("Select year to update stats panel:", `for`="year-picker", style="font-size:15px;"),
+        tags$button(id="play-btn", "▶ Play", style="font-size:14px;padding:8px 16px;cursor:pointer;"),
+        tags$button(id="timeline-btn", "▶ Play Timeline", style="font-size:14px;padding:8px 16px;cursor:pointer;"),
+        tags$label("Select year:", `for`="year-picker", style="font-size:15px;margin-left:8px;"),
         tags$select(id="year-picker", style="font-size:15px;")
       ),
-      # 2. Stats panel (empty placeholder, filled by JS) -- moved up
       tags$div(id="stats-box", style="min-width:210px;"),
-      # 3. Size legend (empty placeholder, filled by JS) -- now last
       tags$div(id="size-legend", style="min-width:120px;")
     ),
-    # JS for populating options and updating panels
     tags$script(HTML(sprintf("window.stats_panel_data = %s;", stats_json))),
     tags$script(HTML(sprintf("window.years_panel = %s;", years_json)))
   )
