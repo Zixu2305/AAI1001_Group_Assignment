@@ -441,36 +441,36 @@ supplement: "Figure",
 
 #horizontalrule
 
-+ #strong[Clear Correlation Between GDP and HDI] : The scatter plot successfully reveals a strong positive relationship between a country’s GDP per capita and its Human Development Index (HDI). This validates the use of GDP as a proxy for national well-being in initial explorations.
++ #strong[Clear Correlation Between GDP and HDI] : The scatter plot successfully reveals a strong positive relationship between a country’s GDP per capita and HDI.
 
-+ #strong[Interactive and Engaging with Tooltips] : Users can hover over each bubble to reveal country-specific information. This interactivity enhances user engagement and facilitates exploration of the data without overwhelming the visual with text.
++ #strong[Interactive and Engaging with Tooltips] : Users can hover over each bubble to reveal country-specific information, enhancing explorations
 
-+ #strong[Use of Globally Recognized Indicators] : Both GDP per capita and HDI are well-established, widely understood indicators. This makes the visualization accessible to both general audiences and experts.
++ #strong[Use of Globally Recognized Indicators] : Both GDP per capita and HDI are well recognized to both general audiences and experts.
 
-+ #strong[Temporal Slider Enables Yearly Comparisons] : The time slider allows users to explore how the relationship evolves over time (1990–2023), supporting temporal analysis and helping spot historical trends or anomalies.
++ #strong[Temporal Slider Enables Yearly Comparisons] : The time slider allows users to explore how the relationship evolves over time.
 
-+ #strong[Colour-Coded by Region for Broad Comparison] : Countries are grouped by continent using distinct colours, which aids users in performing regional comparisons and spotting geographical clusters or outliers.
++ #strong[Colour-Coded by Region for Broad Comparison] : Colour coding helps compare regions and spot patterns
 
-+ #strong[Bubble Size Reflects Population] : The use of proportional bubble sizing adds an extra layer of information, emphasizing the relative population size of each country and showing how populous nations (e.g., India, China) contribute to global trends.
++ #strong[Bubble Size Reflects Population] : The use of proportional bubble sizing adds depth and highlights the influence of large countries
 
-+ #strong[Log Scale Compresses Wide GDP Range] : A logarithmic scale on the x-axis handles the vast differences in GDP per capita values effectively, allowing low-income and high-income countries to be shown on the same scale without excessive crowding.
++ #strong[Log Scale Compresses Wide GDP Range] : A logarithmic scale on the x-axis displays wide GPD ranges clearly
 
 == #emph[Weaknesses]
 <weaknesses>
 
 #horizontalrule
 
-+ #strong[Axis Labels lack clarity, not enough intuitive context];: The x- and y-axis labels lack intuitive explanations. There is no quick contextual guide for non-technical viewers to interpret what a high or low HDI or GDP implies.
++ #strong[Axis Labels lack clarity, not enough intuitive context];: The x- and y-axis labels lack intuitive explanations, may confuse non-technical users
 
 + #strong[Overlapping points in dense regions];: In low-GDP regions, many data points overlap, making it difficult to distinguish individual countries and reducing readability.
 
-+ #strong[No trendlines/regression analysis];: Although a general upward pattern is visible, the lack of a fitted line limits the user’s ability to assess the strength and consistency of the correlation quantitatively.
++ #strong[No trendlines/regression analysis];: The lack of a fitted line limits the user’s ability to assess the strength and consistency of the correlation quantitatively.
 
-+ #strong[No filters by region, income group or custom years];: Users cannot filter the dataset by custom groupings such as "Low Income Countries" or "East Asia". This limits focused exploration and comparative analysis.
++ #strong[No filters options];: Users cannot filter the dataset by region, income group or custom years
 
-+ #strong[Low contrast thus not colour-blind friendly];: Some region colours are low in contrast and may not be distinguishable by colour-blind users. The visual fails to meet universal design or accessibility guidelines.
++ #strong[Low contrast thus not colour-blind friendly];: Some region colours are low in contrast and may not be distinguishable by colour-blind users.
 
-+ #strong[Bubbles sizing overshadow smaller countries];: Large countries like India and China dominate the chart visually due to their population size, which can unintentionally de-emphasize trends in smaller nations.
++ #strong[Bubbles sizing overshadow smaller countries];: Big population bubbles overshadown smaller countries, making it hard to see their data points
 
 + #strong[Population sizing methodology unclear];: It is unclear whether population sizes are static or dynamic over time as the bubble is not showing distinct changes.
 
@@ -494,18 +494,54 @@ supplement: "Figure",
 <implementation>
 == Data Source
 <data-source>
+
+#horizontalrule
+
 UNDP – Human Development Report (2025), Eurostat, OECD, and World Bank (2025) ,HYDE (2023) – History Database of the Global Environment, Gapminder – Population v7 (2022), UN – World Population Prospects (2024), Gapminder – Systema Globalis (2022), Our World in Data – with major processing by Our World in Data
 
 == Software
 <software>
+
+#horizontalrule
+
+We used R and a range of packages to clean, analyze, and visualize the data:
+
+- readr – for importing cleaned CSV files
+- dplyr – for filtering, grouping, and summarising data
+- ggplot2 – for static visualizations such as boxplots and scatter plots
+- plotly – for interactive and animated development plots
+- scales – to format axis labels and numerical values clearly
+- tibble – to define development bands used in visual overlays
+- stats – to compute correlations, trends, and regression models
+
 == Workflow
 <workflow>
+
+#horizontalrule
+
 #block[
 #set enum(numbering: "1)", start: 1)
 + Exploratory Data Analysis:
+]
 
+- Inspect the data structure using glimpse() and summary()
+- Identify the number of unique country entities.
+- Filter the dataset to include only the years from 1990 to 2023
+- Validate and retain only valid 3-letter country codes
+- Rename key variables for clarity and drop rows with missing HDI or GDP values
+- Fill missing owid\_region values by referencing each country’s region from its 2023 observation
+
+#block[
+#set enum(numbering: "1)", start: 2)
 + Feature Engineering:
+]
 
+- Classify countries as "Developed" or "Developing" based on HDI and GDP thresholds
+- Create hdi band categories based on UNDP classification thresholds
+- Create gdp band categories based on GDP per capita thresholds (aligned with World Bank income groupings)
+
+#block[
+#set enum(numbering: "1)", start: 3)
 + Data Visualization:
 ]
 
