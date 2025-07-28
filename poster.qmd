@@ -42,20 +42,18 @@ years <- sort(unique(df$Year))
 years_json <- toJSON(years, auto_unbox = TRUE)
 stats_json <- toJSON(stats, dataframe = "rows", auto_unbox = TRUE)
 
-# 3) Create country mapping for milestone events
+# 3) Create country mapping for milestone events - only multi-country events
 # Using multiple naming variations to match different dataset conventions
 country_groups <- list(
-  "1989" = c("Germany", "Poland", "Hungary", "Czechoslovakia", "Czech Republic", "Czechia", "Slovakia", "Bulgaria", "Romania", "East Germany", "West Germany"),
-  "1994" = c("Rwanda", "Burundi", "Democratic Republic of Congo", "Congo, Dem. Rep.", "Uganda", "Tanzania", "Congo", "Central African Republic"),
-  "2001" = c(), # Global event - no specific highlighting
-  "2004" = c("Indonesia", "Thailand", "Sri Lanka", "India", "Maldives", "Myanmar", "Bangladesh", "Malaysia", "Somalia", "Kenya", "Seychelles"),
-  "2008" = c(), # Global event - no specific highlighting
-  "2010" = c("Tunisia", "Egypt", "Egypt, Arab Rep.", "Libya", "Syria", "Syrian Arab Republic", "Yemen", "Yemen, Rep.", "Bahrain", "Algeria", "Jordan", "Morocco", "Lebanon", "Sudan"),
-  "2014" = c("Guinea", "Liberia", "Sierra Leone", "Mali", "Nigeria", "Senegal", "Democratic Republic of Congo", "Congo, Dem. Rep."),
-  "2015" = c(), # Global event - no specific highlighting
-  "2016" = c(), # Global event - no specific highlighting
-  "2020" = c(), # Global event - no specific highlighting
-  "2022" = c() # Global event - no specific highlighting
+  "1991" = c("Russia", "Ukraine", "Belarus", "Kazakhstan", "Georgia", "Armenia", "Azerbaijan", "Estonia", "Latvia", "Lithuania"), 
+  "1997" = c("Thailand", "Indonesia", "South Korea", "Malaysia", "Philippines", "Singapore", "Hong Kong"), 
+  "2001" = c("Argentina", "Brazil", "Uruguay", "Paraguay", "Ecuador"), 
+  "2008" = c("Iceland", "Ireland", "Greece", "Portugal", "Spain", "Italy"), 
+  "2012" = c("Greece", "Spain", "Portugal", "Italy", "Cyprus", "Ireland"), 
+  "2014" = c("Russia", "Ukraine", "Belarus", "Kazakhstan"), 
+  "2015" = c("Greece", "Germany", "France", "Italy", "Spain", "Portugal"),
+  "2020" = c("India", "Brazil", "Mexico", "Iran", "Peru", "Colombia", "South Africa"), 
+  "2022" = c("Sri Lanka", "Pakistan", "Turkey", "Argentina", "Lebanon")
 )
 
 country_groups_json <- toJSON(country_groups, auto_unbox = TRUE)
@@ -193,20 +191,18 @@ widget <- widget %>%
       var years = window.years_panel;
       var countryGroups = window.country_groups_data;
       
-      // Expanded milestone data with all relevant global development events
-      var milestoneYears = [1989, 1994, 2001, 2004, 2008, 2010, 2014, 2015, 2016, 2020, 2022];
+      // Updated milestone data with only multi-country events
+      var milestoneYears = [1991, 1997, 2001, 2008, 2012, 2014, 2015, 2020, 2022];
       var milestoneTexts = {
-        1989: 'Fall of Berlin Wall:<br>End of Cold War era, beginning<br>of major political transitions<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Eastern European countries</span>',
-        1994: 'Rwanda Genocide:<br>Humanitarian crisis highlighting<br>need for conflict prevention<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Central/East African countries</span>',
-        2001: 'Millennium Development Goals:<br>Global commitment to<br>reducing poverty and inequality<br><span style=\"color:#666;font-style:italic;\">Global impact - all countries relevant</span>',
-        2004: 'Indian Ocean Tsunami:<br>Natural disaster affecting<br>development in affected regions<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Indian Ocean rim countries</span>',
-        2008: 'Global Financial Crisis:<br>Economic downturn affecting<br>development worldwide<br><span style=\"color:#666;font-style:italic;\">Global impact - all countries relevant</span>',
-        2010: 'Arab Spring Begins:<br>Political upheaval affecting<br>Middle East and North Africa<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: MENA countries</span>',
-        2014: 'Ebola Outbreak:<br>Health crisis in West Africa<br>affecting regional development<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: West African countries</span>',
-        2015: 'Sustainable Development Goals:<br>New framework for global<br>development agenda<br><span style=\"color:#666;font-style:italic;\">Global impact - all countries relevant</span>',
-        2016: 'Paris Climate Agreement:<br>Global commitment to<br>climate action and sustainability<br><span style=\"color:#666;font-style:italic;\">Global impact - all countries relevant</span>',
-        2020: 'COVID-19 Pandemic:<br>Global health crisis impacting<br>human development progress<br><span style=\"color:#666;font-style:italic;\">Global impact - all countries relevant</span>',
-        2022: 'Russia-Ukraine War:<br>Major conflict affecting<br>global economy and development<br><span style=\"color:#666;font-style:italic;\">Global impact - all countries relevant</span>'
+        1991: 'USSR Collapse:<br>Transition from communist to<br>market economies, showing rapid<br>development changes<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Former Soviet states</span>',
+        1997: 'Asian Financial Crisis:<br>\"Tiger economies\" face severe<br>setbacks, showing vulnerability<br>of emerging markets<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: East/Southeast Asian countries</span>',
+        2001: 'Argentina Economic Crisis:<br>Middle-income country faces<br>severe economic collapse,<br>highlighting development fragility<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Latin American countries</span>',
+        2008: 'Global Financial Crisis:<br>Even wealthy nations struggle,<br>but developing countries<br>face disproportionate impact<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Most affected developed nations</span>',
+        2012: 'European Debt Crisis:<br>Sovereign debt crisis spreads<br>across multiple European nations,<br>threatening the Eurozone<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Crisis-affected European countries</span>',
+        2014: 'Oil Price Collapse:<br>Commodity-dependent economies<br>struggle while diversified<br>economies remain stable<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Oil-dependent nations</span>',
+        2015: 'European Migration Crisis:<br>Refugee crisis affects multiple<br>European nations, straining<br>resources and social cohesion<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Major destination countries</span>',
+        2020: 'COVID-19 Pandemic:<br>Developing nations face<br>disproportionate health and<br>economic impacts vs wealthy nations<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Most affected developing nations</span>',
+        2022: 'Debt Crisis Wave:<br>Multiple developing nations<br>face sovereign debt crises<br>while rich nations remain stable<br><span style=\"color:#d62728;font-weight:bold;\">→ Highlighted: Crisis-affected nations</span>'
       };
       
       var isPlaying = false;
@@ -227,8 +223,16 @@ widget <- widget %>%
           isPlaying = false;
           clearTimeout(animationTimeout);
           
-          // Reset highlighting
-          resetHighlighting();
+          // Only reset highlighting if we're NOT in timeline mode on a milestone year
+          var currentYear = allYears[currentYearIndex - 1] || allYears[0]; // Get current year
+          var shouldKeepHighlighting = isTimelineMode && 
+                                      milestoneYears.includes(currentYear) && 
+                                      countryGroups[currentYear.toString()] && 
+                                      countryGroups[currentYear.toString()].length > 0;
+          
+          if (!shouldKeepHighlighting) {
+            resetHighlighting();
+          }
           
           // Reset all button texts
           var timelineBtn = document.getElementById('timeline-btn');
@@ -268,90 +272,109 @@ widget <- widget %>%
       
       // Function to highlight specific countries
       function highlightCountries(year, countries) {
-        if (!gd.data || !gd.data[0] || !countries || countries.length === 0) {
+        if (!gd.data || !countries || countries.length === 0) {
           return;
         }
         
         storeOriginalMarkerData();
         
-        // Get current frame data
-        var frameData = null;
-        if (gd._fullLayout && gd._fullLayout.sliders && gd._fullLayout.sliders[0] && gd._fullLayout.sliders[0].steps) {
-          var steps = gd._fullLayout.sliders[0].steps;
-          var currentStep = steps.find(function(step) {
-            return step.label === year.toString();
-          });
-          if (currentStep && currentStep.args && currentStep.args[0]) {
-            frameData = currentStep.args[0];
-          }
-        }
+        // Get ALL current visible data across ALL traces (regions)
+        var allOpacities = [];
+        var allLineWidths = [];
+        var allLineColors = [];
+        var totalHighlighted = 0;
         
-        // If we can't get frame data, work with current visible data
-        var currentData = frameData || gd.data[0];
-        var textData = currentData.text || gd.data[0].text;
-        
-        if (!textData) return;
-        
-        // Create opacity and line width arrays
-        var opacities = [];
-        var lineWidths = [];
-        var lineColors = [];
-        var highlightedCount = 0;
-        
-        for (var i = 0; i < textData.length; i++) {
-          var text = textData[i];
-          var isHighlighted = false;
+        // Loop through ALL traces (one per region)
+        for (var traceIndex = 0; traceIndex < gd.data.length; traceIndex++) {
+          var trace = gd.data[traceIndex];
+          var textData = trace.text;
           
-          // Extract country name from hover text
-          var match = text.match(/<b>(.*?)<\\/b>/);
-          if (match) {
-            var countryName = match[1];
-            // Check for exact matches and partial matches (for variations like 'Korea, Rep.' vs 'South Korea')
-            isHighlighted = countries.some(function(country) {
-              return countryName === country || 
-                     countryName.includes(country) || 
-                     country.includes(countryName) ||
-                     (country === 'South Korea' && (countryName.includes('Korea') && !countryName.includes('North'))) ||
-                     (country === 'Russia' && countryName.includes('Russian')) ||
-                     (country === 'Egypt' && countryName.includes('Egypt')) ||
-                     (country === 'Yemen' && countryName.includes('Yemen')) ||
-                     (country === 'Syria' && countryName.includes('Syria'));
-            });
+          if (!textData) continue;
+          
+          var traceOpacities = [];
+          var traceLineWidths = [];
+          var traceLineColors = [];
+          
+          // Check each point in this trace
+          for (var i = 0; i < textData.length; i++) {
+            var text = textData[i];
+            var isHighlighted = false;
+            
+            // Extract country name from hover text
+            var match = text.match(/<b>(.*?)<\\/b>/);
+            if (match) {
+              var countryName = match[1];
+              
+              // Enhanced country matching with more variations
+              isHighlighted = countries.some(function(country) {
+                return countryName === country || 
+                       countryName.includes(country) || 
+                       country.includes(countryName) ||
+                       // Specific mappings for common variations
+                       (country === 'China' && (countryName === 'China' || countryName === 'People\\'s Republic of China')) ||
+                       (country === 'United States' && (countryName === 'United States' || countryName === 'USA' || countryName === 'US')) ||
+                       (country === 'Hong Kong' && (countryName.includes('Hong Kong') || countryName === 'Hong Kong SAR China')) ||
+                       (country === 'South Korea' && (countryName.includes('Korea') && !countryName.includes('North'))) ||
+                       (country === 'Russia' && (countryName.includes('Russian') || countryName === 'Russia')) ||
+                       (country === 'Egypt' && countryName.includes('Egypt')) ||
+                       (country === 'Yemen' && countryName.includes('Yemen')) ||
+                       (country === 'Syria' && countryName.includes('Syria')) ||
+                       (country === 'Democratic Republic of Congo' && (countryName.includes('Congo') && countryName.includes('Dem'))) ||
+                       (country === 'Congo, Dem. Rep.' && (countryName.includes('Congo') && countryName.includes('Dem')));
+              });
+            }
+            
+            if (isHighlighted) {
+              traceOpacities.push(1.0);
+              traceLineWidths.push(4);
+              traceLineColors.push('#d62728'); // Red highlight
+              totalHighlighted++;
+            } else {
+              traceOpacities.push(0.15); // More faded non-highlighted countries
+              traceLineWidths.push(1);
+              traceLineColors.push('gray');
+            }
           }
           
-          if (isHighlighted) {
-            opacities.push(1.0);
-            lineWidths.push(4);
-            lineColors.push('#d62728'); // Red highlight
-            highlightedCount++;
-          } else {
-            opacities.push(0.15); // More faded non-highlighted countries
-            lineWidths.push(1);
-            lineColors.push('gray');
-          }
+          allOpacities.push(traceOpacities);
+          allLineWidths.push(traceLineWidths);
+          allLineColors.push(traceLineColors);
         }
         
         // Debug: Log highlighting info
-        console.log('Year:', year, 'Expected countries:', countries, 'Highlighted count:', highlightedCount);
+        console.log('Year:', year, 'Expected countries:', countries, 'Total highlighted across all regions:', totalHighlighted);
         
-        // Apply highlighting
-        Plotly.restyle(gd, {
-          'marker.opacity': [opacities],
-          'marker.line.width': [lineWidths],
-          'marker.line.color': [lineColors]
-        });
+        // Apply highlighting to ALL traces
+        var updateObj = {
+          'marker.opacity': allOpacities,
+          'marker.line.width': allLineWidths,
+          'marker.line.color': allLineColors
+        };
+        
+        Plotly.restyle(gd, updateObj);
       }
       
-      // Function to reset highlighting
+      // FIXED: Function to reset highlighting
       function resetHighlighting() {
-        if (!gd.data || !gd.data[0] || !originalMarkerData) {
+        if (!gd.data || !originalMarkerData) {
           return;
         }
         
+        // Reset ALL traces, not just the first one
+        var resetOpacities = [];
+        var resetLineWidths = [];
+        var resetLineColors = [];
+        
+        for (var i = 0; i < gd.data.length; i++) {
+          resetOpacities.push(originalMarkerData.opacity);
+          resetLineWidths.push(originalMarkerData.line.width);
+          resetLineColors.push(originalMarkerData.line.color);
+        }
+        
         Plotly.restyle(gd, {
-          'marker.opacity': originalMarkerData.opacity,
-          'marker.line.width': originalMarkerData.line.width,
-          'marker.line.color': originalMarkerData.line.color
+          'marker.opacity': resetOpacities,
+          'marker.line.width': resetLineWidths,
+          'marker.line.color': resetLineColors
         });
       }
       
@@ -359,10 +382,16 @@ widget <- widget %>%
       function updateAnnotations(year, showMilestone) {
         var currentAnnotations = [];
         
-        // Add existing axis annotations
+        // Add existing axis annotations (HDI and GDP income labels)
         if (gd.layout && gd.layout.annotations) {
           currentAnnotations = gd.layout.annotations.filter(function(ann) {
-            return ann.text && (ann.text.includes('HDI') || ann.text.includes('income'));
+            // Keep only the axis labels, exclude any previous milestone annotations
+            return ann.text && (ann.text.includes('HDI') || ann.text.includes('income')) && 
+                   !ann.text.includes('Crisis') && !ann.text.includes('Spring') && 
+                   !ann.text.includes('Collapse') && !ann.text.includes('Pandemic') && 
+                   !ann.text.includes('Disaster') && !ann.text.includes('Decision') &&
+                   !ann.text.includes('Wave') && !ann.text.includes('Financial') &&
+                   !ann.text.includes('Migration');
           });
         }
         
@@ -517,8 +546,20 @@ widget <- widget %>%
           
           var selectedYear = parseInt(this.value);
           updateStats(selectedYear);
-          updateAnnotations(selectedYear, false); // Don't show milestones for manual selection
-          resetHighlighting(); // Reset any highlighting
+          
+          // Check if manually selected year is a milestone and we're in timeline mode
+          var shouldShowMilestone = isTimelineMode && milestoneYears.includes(selectedYear);
+          updateAnnotations(selectedYear, shouldShowMilestone);
+          
+          // Apply highlighting if in timeline mode and it's a milestone year
+          if (shouldShowMilestone && countryGroups[selectedYear.toString()]) {
+            setTimeout(function() {
+              highlightCountries(selectedYear, countryGroups[selectedYear.toString()]);
+            }, 100);
+          } else {
+            resetHighlighting(); // Reset highlighting for non-milestone years or regular mode
+          }
+          
           if (gd) {
             Plotly.animate(gd, {frame: {redraw: true, name: this.value}}, {mode: 'immediate'});
           }
