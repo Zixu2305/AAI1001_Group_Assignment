@@ -367,7 +367,7 @@
    footer_text: [AAI1001 AY24/25 Tri 2 Team Project], 
 
   // Any URL, like a link to the conference website.
-  
+   footer_url: [~], 
 
   // Emails of the authors.
    footer_email_ids: [Team 14], 

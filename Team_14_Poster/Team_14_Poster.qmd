@@ -7,6 +7,7 @@ format:
     poster-authors: "Tan Zi Xu ,Teo Royston, Sim Yue Chong Samuel, Ng Kay Cheng, Ramasubramanian Srinithi"
     institution-logo: "./images/sit.png"
     footer-text: "AAI1001 AY24/25 Tri 2 Team Project"
+    footer-url: "&nbsp;"
     footer-emails: "Team 14"
     footer-color: "ebcfb2"
 ---
