@@ -318,8 +318,7 @@
       row-gutter: 50pt,
       image(univ_logo, width: univ_logo_scale),
       text(title_font_size, title + "\n\n") + 
-      text(authors_font_size, emph(authors) + 
-          "   (" + departments + ") "),
+      text(authors_font_size, emph(authors)),
     )
   )
 
@@ -416,9 +415,7 @@
 
 = Introduction
 <introduction>
-Global development remains an ongoing challenge, as disparities in income and well-being continue to define the divide between developed and developing countries. While GDP per capita remains a common prosperity metric, it falls short in capturing crucial dimensions of quality of life like education and healthcare. The Human Development Index (HDI), a composite measure of income, life expectancy, and schooling, offers a more holistic benchmark, yet even it may not fully reveal the complex interplay of factors driving inequality across nations
-
-Our project builds upon the Our World in Data visualization of HDI vs.~GDP per capita (2023), which effectively uses population-sized bubbles and region-based coloring to enhance its analytical depth. Through targeted refinements and potential integration of additional socio-economic dimensions, we aim to uncover more nuanced patterns in global development, highlight persistent gaps in human well-being, and provide a clearer visual narrative to inform crucial discussions on global inequality and progress.
+Global development remains an ongoing challenge, as disparities in income and well-being continue to define the divide between developed and developing countries. While GDP per capita remains a common prosperity metric, it falls short in capturing crucial dimensions of quality of life like education and healthcare. The Human Development Index (HDI), a composite measure of income, life expectancy, and schooling, offers a more holistic benchmark, yet even it may not fully reveal the complex interplay of factors driving inequality across nations. Our project builds upon the Our World in Data visualization of HDI vs.~GDP per capita (2023), which effectively uses population-sized bubbles and region-based coloring to enhance its analytical depth. Through targeted refinements and potential integration of additional socio-economic dimensions, we aim to uncover more nuanced patterns in global development, highlight persistent gaps in human well-being, and provide a clearer visual narrative to inform crucial discussions on global inequality and progress.
 
 = Original Visualization
 <original-visualization>
@@ -438,9 +435,6 @@ supplement: "Figure",
 <critical-assessment-of-original-visualization>
 == #emph[Strengths]
 <strengths>
-
-#horizontalrule
-
 + #strong[Clear Correlation Between GDP and HDI] : The scatter plot successfully reveals a strong positive relationship between a country’s GDP per capita and HDI.
 
 + #strong[Interactive and Engaging with Tooltips] : Users can hover over each bubble to reveal country-specific information, enhancing explorations
@@ -457,9 +451,6 @@ supplement: "Figure",
 
 == #emph[Weaknesses]
 <weaknesses>
-
-#horizontalrule
-
 + #strong[Axis Labels lack clarity, not enough intuitive context];: The x- and y-axis labels lack intuitive explanations, may confuse non-technical users
 
 + #strong[Overlapping points in dense regions];: In low-GDP regions, many data points overlap, making it difficult to distinguish individual countries and reducing readability.
@@ -494,31 +485,19 @@ supplement: "Figure",
 <implementation>
 == Data Source
 <data-source>
-
-#horizontalrule
-
 UNDP – Human Development Report (2025), Eurostat, OECD, and World Bank (2025) ,HYDE (2023) – History Database of the Global Environment, Gapminder – Population v7 (2022), UN – World Population Prospects (2024), Gapminder – Systema Globalis (2022), Our World in Data – with major processing by Our World in Data
 
 == Software
 <software>
-
-#horizontalrule
-
 We used R and a range of packages to clean, analyze, and visualize the data:
 
 - readr – for importing cleaned CSV files
 - dplyr – for filtering, grouping, and summarising data
-- ggplot2 – for static visualizations such as boxplots and scatter plots
 - plotly – for interactive and animated development plots
 - scales – to format axis labels and numerical values clearly
-- tibble – to define development bands used in visual overlays
-- stats – to compute correlations, trends, and regression models
 
 == Workflow
 <workflow>
-
-#horizontalrule
-
 #block[
 #set enum(numbering: "1)", start: 1)
 + Exploratory Data Analysis:
@@ -537,22 +516,28 @@ We used R and a range of packages to clean, analyze, and visualize the data:
 ]
 
 - Classify countries as "Developed" or "Developing" based on HDI and GDP thresholds
-- Create hdi band categories based on UNDP classification thresholds
-- Create gdp band categories based on GDP per capita thresholds (aligned with World Bank income groupings)
-
-#block[
-#set enum(numbering: "1)", start: 3)
-+ Data Visualization:
-]
+- Create HDI band categories based on UNDP classification thresholds
+- Create GDP band categories based on GDP per capita thresholds (aligned with World Bank income groupings)
+- Create and highlight the list of country during milestone events
 
 = Improved Visualization
 <improved-visualization>
-= Further Improvements
-<further-improvements>
+#figure([
+#box(image("images/ImprovedVisualisation.png"))
+], caption: figure.caption(
+position: bottom, 
+[
+HDI vs GDP per Capita: Global Trends Over Time
+]), 
+kind: "quarto-float-fig", 
+supplement: "Figure", 
+)
+
+
+= Insights
+<insights>
+This visualization shows a clear divide between developed and developing countries from 1990 to 2023. The United States, Germany, and Japan consistently remain in the top-right quadrant with high GDP per capita and HDI. In contrast, countries like Ethiopia and Mozambique, classified as least developed, and Pakistan, a lower-middle income country start off much lower in both measures. #strong[Over time, developing nations such as India, Vietnam, and Bangladesh show strong gains in HDI despite only modest increases in GDP, proving that meaningful human development is achievable even without closing the income gap.]
+
 = References
 <references>
-= Further Reading
-<further-reading>
-
-
-
+Ritchie, H., Roser, M., & Ortiz-Ospina, E. (2023). Human Development Index vs.~GDP per capita \[Interactive graph\]. Our World in Data. https:\/\/ourworldindata.org/grapher/human-development-index-vs-gdp-per-capita

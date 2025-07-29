@@ -168,8 +168,7 @@
       row-gutter: 50pt,
       image(univ_logo, width: univ_logo_scale),
       text(title_font_size, title + "\n\n") + 
-      text(authors_font_size, emph(authors) + 
-          "   (" + departments + ") "),
+      text(authors_font_size, emph(authors)),
     )
   )
 
